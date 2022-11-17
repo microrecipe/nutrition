@@ -7,28 +7,25 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const logger = new Logger('nutrition');
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.GRPC,
-      options: {
-        package: 'nutritions',
-        protoPath: join(__dirname, '../src/nutritions.proto'),
-        url: 'localhost:3009',
-      },
+  const app = await NestFactory.create(AppModule);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.GRPC,
+    options: {
+      package: 'nutritions',
+      protoPath: join(__dirname, '../src/nutritions.proto'),
+      url: `${process.env.NUTRITION_SVC}:${process.env.NUTRITION_GRPC_PORT}`,
     },
-  );
+  });
 
-  await app.listen();
-
-  // const app = await NestFactory.create(AppModule);
-
-  // await app.listen(3009);
-
-  // logger.verbose(
-  //   `nutrition microservice running on port: ${await app.getUrl()}`,
-  // );
+  await app.startAllMicroservices();
 
   logger.verbose(`nutrition microservice is listening...`);
+
+  await app.listen(process.env.NUTRITION_REST_PORT);
+
+  logger.verbose(
+    `nutrition service running on port: ${process.env.NUTRITION_REST_PORT}`,
+  );
 }
 bootstrap();
