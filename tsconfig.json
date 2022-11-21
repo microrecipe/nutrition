@@ -17,13 +17,5 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@app/library": [
-        "libs/library/src"
-      ],
-      "@app/library/*": [
-        "libs/library/src/*"
-      ]
-    }
   }
 }

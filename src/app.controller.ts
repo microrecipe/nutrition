@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { GrpcMethod } from '@nestjs/microservices';
+import { GrpcMethod, MessagePattern } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { Ingridient, Nutrition } from './nutritions.interface';
 
@@ -9,6 +9,11 @@ export class AppController {
 
   @GrpcMethod('NutritionsService')
   getNutritionByIngridientId(ingridient: Ingridient): Nutrition {
+    return this.service.getNutritionByIngridientId(ingridient.id);
+  }
+
+  @MessagePattern('getNutrition')
+  _getNutritionByIngridientId(ingridient: Ingridient): Nutrition {
     return this.service.getNutritionByIngridientId(ingridient.id);
   }
 }
