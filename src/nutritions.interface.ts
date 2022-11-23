@@ -1,13 +1,18 @@
-export interface Ingridient {
-  id: number;
+export interface IIngridient {
+  id?: number;
 }
 
-export interface Nutrition {
-  ingridient: Ingridient;
-  calories: string;
-  fat: string;
-  sodium: string;
-  fiber: string;
-  sugar: string;
-  protein: string;
+export interface INutrition {
+  id?: number;
+  name?: string;
+  per_gram?: string;
+  ingridient_id?: number;
+}
+
+export interface NutritionsList {
+  nutritions?: INutrition;
+}
+
+export interface AddNutrition {
+  name: string;
 }

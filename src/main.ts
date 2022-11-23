@@ -1,11 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import {
-  GrpcOptions,
-  MicroserviceOptions,
-  TcpOptions,
-  Transport,
-} from '@nestjs/microservices';
+import { GrpcOptions, TcpOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
