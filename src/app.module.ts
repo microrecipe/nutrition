@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config/dist';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GrpcController } from './app-grpc.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Nutrition } from './nutrition.entity';
@@ -28,7 +29,7 @@ import { Nutrition } from './nutrition.entity';
     }),
     TypeOrmModule.forFeature([Nutrition]),
   ],
-  controllers: [AppController],
+  controllers: [AppController, GrpcController],
   providers: [AppService],
 })
 export class AppModule {}
