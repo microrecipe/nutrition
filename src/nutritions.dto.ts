@@ -1,5 +1,4 @@
 import { Nutrition } from './nutrition.entity';
-import { INutrition } from './nutritions.interface';
 
 export class NutritionsDTO {
   static toDTO(nutrition: Nutrition) {

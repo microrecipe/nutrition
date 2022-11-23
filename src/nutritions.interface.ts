@@ -16,3 +16,9 @@ export interface NutritionsList {
 export interface AddNutrition {
   name: string;
 }
+
+export interface EditNutrition {
+  id?: number;
+  per_gram?: string;
+  ingridient_id?: number;
+}

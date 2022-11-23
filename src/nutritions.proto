@@ -4,6 +4,7 @@ package nutritions;
 
 service NutritionsService {
   rpc GetNutritionByIngridientId (Ingridient) returns (Nutrition) {}
+  rpc EditNutrition (EditNutrition) returns (Nutrition) {}
 }
 
 message Ingridient {
@@ -11,12 +12,14 @@ message Ingridient {
 }
 
 message Nutrition {
-  Ingridient ingridient = 1;
-  string calories = 2;
-  string fat = 3;
-  string sodium = 4;
-  string fiber = 5;
-  string sugar = 6;
-  string protein = 7;
+  int32 id = 1;
+  string name = 2;
+  string per_gram = 3;
+  int32 ingridient_id = 4;
 }
 
+message EditNutrition {
+  int32 id = 1;
+  string per_gram = 3;
+  int32 ingridient_id = 4;
+}
