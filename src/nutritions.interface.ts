@@ -1,3 +1,5 @@
+import { Nutrition } from './nutrition.entity';
+
 export interface IIngridient {
   id?: number;
 }
@@ -5,20 +7,24 @@ export interface IIngridient {
 export interface INutrition {
   id?: number;
   name?: string;
-  per_gram?: string;
-  ingridient_id?: number;
+  perGram?: string;
+  ingridientId?: number;
 }
 
 export interface NutritionsList {
-  nutritions?: INutrition;
+  nutritions?: INutrition[];
+}
+
+export interface GetNutrition {
+  id: number;
 }
 
 export interface AddNutrition {
   name: string;
 }
 
-export interface EditNutrition {
-  id?: number;
-  per_gram?: string;
-  ingridient_id?: number;
+export interface SetNutrition {
+  id: number;
+  perGram: string;
+  ingridientId: number;
 }

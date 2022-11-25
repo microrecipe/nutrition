@@ -11,18 +11,4 @@ export class Nutrition {
     nullable: true,
   })
   name: string;
-
-  @Column({
-    name: 'per_gram',
-    type: 'varchar',
-    nullable: true,
-  })
-  perGram: string;
-
-  @Column({
-    name: 'ingridient_id',
-    type: 'int',
-    nullable: true,
-  })
-  ingridientId: number;
 }

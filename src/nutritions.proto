@@ -3,8 +3,9 @@ syntax = "proto3";
 package nutritions;
 
 service NutritionsService {
-  rpc GetNutritionByIngridientId (Ingridient) returns (Nutrition) {}
-  rpc EditNutrition (EditNutrition) returns (Nutrition) {}
+  rpc ListNutritionsByIngridientId (Ingridient) returns (ListNutritions) {}
+  rpc SetNutritionToIngridient (SetNutrition) returns (Nutrition) {}
+  rpc GetNutritionById (NutritionId) returns (Nutrition) {}
 }
 
 message Ingridient {
@@ -18,8 +19,16 @@ message Nutrition {
   int32 ingridient_id = 4;
 }
 
-message EditNutrition {
+message ListNutritions {
+  repeated Nutrition nutritions = 1;
+}
+
+message NutritionId {
   int32 id = 1;
-  string per_gram = 3;
-  int32 ingridient_id = 4;
+}
+
+message SetNutrition {
+  int32 id = 1;
+  string per_gram = 2;
+  int32 ingridient_id = 3;
 }

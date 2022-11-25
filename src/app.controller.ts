@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { NutritionsDTO, NutritionsListDTO } from './nutritions.dto';
+import { NutritionsDTO } from './nutritions.dto';
 import { AddNutrition } from './nutritions.interface';
 
 @Controller()
@@ -8,8 +8,10 @@ export class AppController {
   constructor(private readonly service: AppService) {}
 
   @Get('nutritions')
-  async listNutritions(): Promise<NutritionsListDTO> {
-    return NutritionsListDTO.toDTO(await this.service.listNutritions());
+  async listNutritions(): Promise<NutritionsDTO[]> {
+    return (await this.service.listNutritions()).map((nutrition) =>
+      NutritionsDTO.toDTO(nutrition),
+    );
   }
 
   @Post('nutritions')

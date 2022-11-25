@@ -1,50 +1,77 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { In } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { Nutrition } from './nutrition.entity';
+import { NutritionIngridient } from './nutritions-ingridients.entity';
 import {
   AddNutrition,
-  EditNutrition,
+  SetNutrition,
+  GetNutrition,
   IIngridient,
+  INutrition,
 } from './nutritions.interface';
 
 @Injectable()
 export class AppService {
   constructor(
     @InjectRepository(Nutrition)
-    private repository: Repository<Nutrition>,
+    private nutritionsRepository: Repository<Nutrition>,
+    @InjectRepository(NutritionIngridient)
+    private nutritionsIngridientRepository: Repository<NutritionIngridient>,
   ) {}
 
   async listNutritionsByIngridientId(
     ingridient: IIngridient,
-  ): Promise<Nutrition[]> {
-    const nutritions = await this.repository.find({
+  ): Promise<INutrition[]> {
+    const nutritionIngridients = await this.nutritionsIngridientRepository.find(
+      {
+        where: {
+          ingridientId: ingridient.id,
+        },
+        order: {
+          id: 'ASC',
+        },
+      },
+    );
+
+    const nutritions = await this.nutritionsRepository.find({
       where: {
-        ingridientId: ingridient.id,
+        id: In(
+          nutritionIngridients.map(
+            (nutritionIngridient) => nutritionIngridient.nutrition?.id,
+          ),
+        ),
       },
     });
 
-    if (nutritions.length < 1) {
-      throw new NotFoundException('Nutrition not found');
-    }
-
-    return nutritions;
+    return nutritions.map((nutrition) => ({
+      id: nutrition.id,
+      name: nutrition.name,
+      perGram: nutritionIngridients.find(
+        (ni) => ni.nutrition.id === nutrition.id,
+      ).perGram,
+    }));
   }
 
   async listNutritions() {
-    return await this.repository.find();
+    return await this.nutritionsRepository.find({
+      order: {
+        id: 'ASC',
+      },
+    });
   }
 
   async addNutrition(data: AddNutrition): Promise<Nutrition> {
-    const nutrition = this.repository.create({
+    const nutrition = this.nutritionsRepository.create({
       name: data.name,
     });
 
-    return await this.repository.save(nutrition);
+    return await this.nutritionsRepository.save(nutrition);
   }
 
-  async editNutrition(data: EditNutrition): Promise<Nutrition> {
-    const nutrition = await this.repository.findOne({
+  async setNutritionToIngridient(data: SetNutrition): Promise<Nutrition> {
+    const nutrition = await this.nutritionsRepository.findOne({
       where: {
         id: data.id,
       },
@@ -54,11 +81,22 @@ export class AppService {
       throw new NotFoundException('Nutrition not found');
     }
 
-    nutrition.ingridientId = data.ingridient_id;
-    nutrition.perGram = data.per_gram;
+    const nutritionIngridient = this.nutritionsIngridientRepository.create({
+      perGram: data.perGram,
+      ingridientId: data.ingridientId,
+      nutrition,
+    });
 
-    await this.repository.save(nutrition);
+    await this.nutritionsIngridientRepository.save(nutritionIngridient);
 
     return nutrition;
+  }
+
+  async getNutritionById(data: GetNutrition): Promise<Nutrition> {
+    return await this.nutritionsRepository.findOne({
+      where: {
+        id: data.id,
+      },
+    });
   }
 }

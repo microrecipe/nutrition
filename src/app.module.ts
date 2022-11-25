@@ -5,6 +5,7 @@ import { GrpcController } from './app-grpc.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Nutrition } from './nutrition.entity';
+import { NutritionIngridient } from './nutritions-ingridients.entity';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { Nutrition } from './nutrition.entity';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([Nutrition]),
+    TypeOrmModule.forFeature([Nutrition, NutritionIngridient]),
   ],
   controllers: [AppController, GrpcController],
   providers: [AppService],
