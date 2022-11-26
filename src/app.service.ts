@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from '@nestjs/common/services';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
@@ -12,12 +13,15 @@ import {
   IIngridient,
   INutrition,
 } from './nutritions.interface';
+import { ClientPackageNames } from './package-names.enum';
 
 @Injectable()
 export class AppService {
   private logger = new Logger('NutritionsService');
 
   constructor(
+    @Inject(ClientPackageNames.nutritionDeleteTopic)
+    private nutritionDeleteTopic: ClientKafka,
     @InjectRepository(Nutrition)
     private nutritionsRepository: Repository<Nutrition>,
     @InjectRepository(NutritionIngridient)
@@ -101,6 +105,28 @@ export class AppService {
         id: data.id,
       },
     });
+  }
+
+  async deleteNutrition(id: number): Promise<string> {
+    const nutrition = await this.nutritionsRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!nutrition) {
+      throw new NotFoundException('Nutrition not found');
+    }
+
+    await this.nutritionsRepository.remove(nutrition);
+
+    this.nutritionDeleteTopic
+      .emit('nutrition.deleted', { nutrition_id: id })
+      .forEach(() => {
+        this.logger.log('nutrition.deleted emitted');
+      });
+
+    return 'Nutrition deleted';
   }
 
   async handleIngridientDeleted(ingridientId: number): Promise<void> {

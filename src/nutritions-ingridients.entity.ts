@@ -29,6 +29,7 @@ export class NutritionIngridient {
   @ManyToOne(() => Nutrition, {
     nullable: true,
     eager: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ referencedColumnName: 'id', name: 'nutrition_id' })
   nutrition: Nutrition;

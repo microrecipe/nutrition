@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Delete, Param } from '@nestjs/common/decorators';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { NutritionsDTO } from './nutritions.dto';
@@ -21,6 +22,11 @@ export class AppController {
   @Post('nutritions')
   async addNutrition(@Body() body: AddNutrition): Promise<NutritionsDTO> {
     return NutritionsDTO.toDTO(await this.service.addNutrition(body));
+  }
+
+  @Delete('nutritions/:id')
+  async deleteNutrition(@Param('id') id: number): Promise<string> {
+    return await this.service.deleteNutrition(id);
   }
 
   @EventPattern('ingridient.deleted')

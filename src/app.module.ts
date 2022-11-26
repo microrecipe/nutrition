@@ -1,17 +1,34 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config/dist';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GrpcController } from './app-grpc.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Nutrition } from './nutrition.entity';
 import { NutritionIngridient } from './nutritions-ingridients.entity';
+import { ClientPackageNames } from './package-names.enum';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ClientsModule.register([
+      {
+        name: ClientPackageNames.nutritionDeleteTopic,
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'microrecipe',
+            brokers: ['broker:29092'],
+          },
+          consumer: {
+            groupId: 'nutrition',
+          },
+        },
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
