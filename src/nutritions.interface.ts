@@ -1,5 +1,3 @@
-import { Nutrition } from './nutrition.entity';
-
 export interface IIngridient {
   id?: number;
 }
@@ -27,4 +25,8 @@ export interface SetNutrition {
   id: number;
   perGram: string;
   ingridientId: number;
+}
+
+export interface HandleIngridientDeletePayload {
+  ingridient_id: number;
 }

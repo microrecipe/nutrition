@@ -1,6 +1,11 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { GrpcOptions, TcpOptions, Transport } from '@nestjs/microservices';
+import {
+  GrpcOptions,
+  KafkaOptions,
+  TcpOptions,
+  Transport,
+} from '@nestjs/microservices';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
@@ -23,6 +28,18 @@ async function bootstrap() {
     options: {
       host: '0.0.0.0',
       port: Number(process.env.NUTRITION_TCP_PORT),
+    },
+  });
+
+  app.connectMicroservice<KafkaOptions>({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        brokers: ['broker:29092'],
+      },
+      consumer: {
+        groupId: 'nutrition',
+      },
     },
   });
 

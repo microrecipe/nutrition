@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Logger } from '@nestjs/common/services';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
@@ -14,6 +15,8 @@ import {
 
 @Injectable()
 export class AppService {
+  private logger = new Logger('NutritionsService');
+
   constructor(
     @InjectRepository(Nutrition)
     private nutritionsRepository: Repository<Nutrition>,
@@ -98,5 +101,22 @@ export class AppService {
         id: data.id,
       },
     });
+  }
+
+  async handleIngridientDeleted(ingridientId: number): Promise<void> {
+    this.logger.log('ingridient.deleted received');
+
+    const nutritionsIngridients =
+      await this.nutritionsIngridientRepository.find({
+        where: {
+          ingridientId,
+        },
+      });
+
+    await this.nutritionsIngridientRepository.remove(nutritionsIngridients);
+
+    this.logger.log('nutritions_recipes deleted');
+
+    return;
   }
 }
