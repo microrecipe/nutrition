@@ -21,7 +21,7 @@ import { ClientPackageNames } from './package-names.enum';
         options: {
           client: {
             clientId: 'microrecipe',
-            brokers: ['broker:29092'],
+            brokers: process.env.KAFKA_BROKERS.split(','),
           },
           consumer: {
             groupId: 'nutrition',
