@@ -16,10 +16,11 @@ export class AppController {
   constructor(private readonly service: AppService) {}
 
   @Get('nutritions')
-  async listNutritions(): Promise<NutritionsDTO[]> {
-    return (await this.service.listNutritions()).map((nutrition) =>
-      NutritionsDTO.toDTO(nutrition),
-    );
+  @UseGuards(JwtAuthGuard)
+  async listNutritions(
+    @UserPayload() user: UserType,
+  ): Promise<NutritionsDTO[]> {
+    return await this.service.listNutritions(user);
   }
 
   @Post('nutritions')

@@ -63,12 +63,16 @@ export class AppService {
     }));
   }
 
-  async listNutritions() {
-    return await this.nutritionsRepository.find({
+  async listNutritions(user: UserType): Promise<NutritionsDTO[]> {
+    const nutritions = await this.nutritionsRepository.find({
+      where: {
+        userId: user.id,
+      },
       order: {
         id: 'ASC',
       },
     });
+    return nutritions.map((nutrition) => NutritionsDTO.toDTO(nutrition));
   }
 
   async addNutrition(
