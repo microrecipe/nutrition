@@ -11,4 +11,11 @@ export class Nutrition {
     nullable: true,
   })
   name: string;
+
+  @Column({
+    name: 'user_id',
+    type: 'int',
+    nullable: true,
+  })
+  userId: number;
 }

@@ -6,12 +6,14 @@ import { In } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { Nutrition } from './nutrition.entity';
 import { NutritionIngridient } from './nutritions-ingridients.entity';
+import { NutritionsDTO } from './nutritions.dto';
 import {
   AddNutrition,
   SetNutrition,
   GetNutrition,
   IIngridient,
   INutrition,
+  UserType,
 } from './nutritions.interface';
 import { ClientPackageNames } from './package-names.enum';
 
@@ -69,12 +71,18 @@ export class AppService {
     });
   }
 
-  async addNutrition(data: AddNutrition): Promise<Nutrition> {
-    const nutrition = this.nutritionsRepository.create({
-      name: data.name,
-    });
+  async addNutrition(
+    data: AddNutrition,
+    user: UserType,
+  ): Promise<NutritionsDTO> {
+    const nutrition = await this.nutritionsRepository.save(
+      this.nutritionsRepository.create({
+        name: data.name,
+        userId: user.id,
+      }),
+    );
 
-    return await this.nutritionsRepository.save(nutrition);
+    return NutritionsDTO.toDTO(nutrition);
   }
 
   async setNutritionToIngridient(data: SetNutrition): Promise<Nutrition> {

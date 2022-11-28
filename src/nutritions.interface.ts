@@ -30,3 +30,11 @@ export interface SetNutrition {
 export interface HandleIngridientDeletePayload {
   ingridient_id: number;
 }
+
+export interface TokenPayload {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export type UserType = TokenPayload;
