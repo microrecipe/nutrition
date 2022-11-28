@@ -119,10 +119,11 @@ export class AppService {
     });
   }
 
-  async deleteNutrition(id: number): Promise<string> {
+  async deleteNutrition(id: number, user: UserType): Promise<string> {
     const nutrition = await this.nutritionsRepository.findOne({
       where: {
         id,
+        userId: user.id,
       },
     });
 

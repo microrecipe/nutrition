@@ -33,8 +33,12 @@ export class AppController {
   }
 
   @Delete('nutritions/:id')
-  async deleteNutrition(@Param('id') id: number): Promise<string> {
-    return await this.service.deleteNutrition(id);
+  @UseGuards(JwtAuthGuard)
+  async deleteNutrition(
+    @Param('id') id: number,
+    @UserPayload() user: UserType,
+  ): Promise<string> {
+    return await this.service.deleteNutrition(id, user);
   }
 
   @EventPattern('ingridient.deleted')
