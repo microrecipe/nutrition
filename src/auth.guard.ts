@@ -25,6 +25,16 @@ export class JwtAuthGuard extends AuthGuard('JwtStrategy') {
       );
     }
 
+    if (!user.isAdmin) {
+      throw new HttpException(
+        {
+          code: 401,
+          message: 'Not allowed',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     return user;
   }
 }

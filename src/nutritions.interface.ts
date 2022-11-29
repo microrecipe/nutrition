@@ -31,13 +31,12 @@ export interface HandleIngridientDeletePayload {
   ingridient_id: number;
 }
 
-export interface TokenPayload {
+export interface UserType {
   id: number;
   name: string;
   email: string;
+  isAdmin: boolean;
 }
-
-export type UserType = TokenPayload;
 
 export interface UserId {
   id: number;
