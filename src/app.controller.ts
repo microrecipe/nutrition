@@ -1,5 +1,16 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Delete, Param, UseGuards } from '@nestjs/common/decorators';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Post,
+} from '@nestjs/common';
+import {
+  Delete,
+  Param,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common/decorators';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { UserPayload } from './auth.decorator';
@@ -12,15 +23,13 @@ import {
 } from './nutritions.interface';
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AppController {
   constructor(private readonly service: AppService) {}
 
   @Get('nutritions')
-  @UseGuards(JwtAuthGuard)
-  async listNutritions(
-    @UserPayload() user: UserType,
-  ): Promise<NutritionsDTO[]> {
-    return await this.service.listNutritions(user);
+  async listNutritions(): Promise<NutritionsDTO[]> {
+    return await this.service.listNutritions();
   }
 
   @Post('nutritions')

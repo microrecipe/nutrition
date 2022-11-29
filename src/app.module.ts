@@ -3,9 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config/dist';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GrpcController } from './app-grpc.controller';
+import { GrpcController } from './grpc.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { GrpcService } from './grpc.service';
 import { JwtStrategy } from './jwt.strategy';
 import { Nutrition } from './nutrition.entity';
 import { NutritionIngridient } from './nutritions-ingridients.entity';
@@ -51,6 +52,6 @@ import { ClientPackageNames } from './package-names.enum';
     JwtModule.register({}),
   ],
   controllers: [AppController, GrpcController],
-  providers: [AppService, JwtStrategy],
+  providers: [AppService, JwtStrategy, GrpcService],
 })
 export class AppModule {}

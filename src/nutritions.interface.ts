@@ -38,3 +38,7 @@ export interface TokenPayload {
 }
 
 export type UserType = TokenPayload;
+
+export interface UserId {
+  id: number;
+}
