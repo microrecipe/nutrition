@@ -5,7 +5,7 @@ import { Nutrition } from './nutrition.entity';
 import {
   SetNutrition,
   GetNutrition,
-  IIngridient,
+  IIngredient,
   NutritionsList,
 } from './nutritions.interface';
 
@@ -14,19 +14,19 @@ export class GrpcController {
   constructor(private readonly service: GrpcService) {}
 
   @GrpcMethod('NutritionsService')
-  async listNutritionsByIngridientId(
-    ingridient: IIngridient,
+  async listNutritionsByIngredientId(
+    ingredient: IIngredient,
   ): Promise<NutritionsList> {
     return {
-      nutritions: await this.service.listNutritionsByIngridientId({
-        id: ingridient.id,
+      nutritions: await this.service.listNutritionsByIngredientId({
+        id: ingredient.id,
       }),
     };
   }
 
   @GrpcMethod('NutritionsService')
-  async setNutritionToIngridient(nutrition: SetNutrition): Promise<Nutrition> {
-    return await this.service.setNutritionToIngridient(nutrition);
+  async setNutritionToIngredient(nutrition: SetNutrition): Promise<Nutrition> {
+    return await this.service.setNutritionToIngredient(nutrition);
   }
 
   @GrpcMethod('NutritionsService')

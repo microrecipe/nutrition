@@ -12,5 +12,5 @@ export class NutritionsDTO {
   id: number;
   name: string;
   per_gram: string;
-  ingridient_id: number;
+  ingredient_id: number;
 }

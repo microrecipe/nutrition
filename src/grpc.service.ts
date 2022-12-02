@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Nutrition } from './nutrition.entity';
-import { NutritionIngridient } from './nutritions-ingridients.entity';
+import { NutritionIngredient } from './nutritions-ingredients.entity';
 import {
   GetNutrition,
-  IIngridient,
+  IIngredient,
   INutrition,
   SetNutrition,
 } from './nutritions.interface';
@@ -15,17 +15,17 @@ export class GrpcService {
   constructor(
     @InjectRepository(Nutrition)
     private nutritionsRepository: Repository<Nutrition>,
-    @InjectRepository(NutritionIngridient)
-    private nutritionsIngridientRepository: Repository<NutritionIngridient>,
+    @InjectRepository(NutritionIngredient)
+    private nutritionsIngredientRepository: Repository<NutritionIngredient>,
   ) {}
 
-  async listNutritionsByIngridientId(
-    ingridient: IIngridient,
+  async listNutritionsByIngredientId(
+    ingredient: IIngredient,
   ): Promise<INutrition[]> {
-    const nutritionIngridients = await this.nutritionsIngridientRepository.find(
+    const nutritionIngredients = await this.nutritionsIngredientRepository.find(
       {
         where: {
-          ingridientId: ingridient.id,
+          ingredientId: ingredient.id,
         },
         order: {
           id: 'ASC',
@@ -36,8 +36,8 @@ export class GrpcService {
     const nutritions = await this.nutritionsRepository.find({
       where: {
         id: In(
-          nutritionIngridients.map(
-            (nutritionIngridient) => nutritionIngridient.nutrition?.id,
+          nutritionIngredients.map(
+            (nutritionIngredient) => nutritionIngredient.nutrition?.id,
           ),
         ),
       },
@@ -46,13 +46,13 @@ export class GrpcService {
     return nutritions.map((nutrition) => ({
       id: nutrition.id,
       name: nutrition.name,
-      perGram: nutritionIngridients.find(
+      perGram: nutritionIngredients.find(
         (ni) => ni.nutrition.id === nutrition.id,
       )?.perGram,
     }));
   }
 
-  async setNutritionToIngridient(data: SetNutrition): Promise<Nutrition> {
+  async setNutritionToIngredient(data: SetNutrition): Promise<Nutrition> {
     const nutrition = await this.nutritionsRepository.findOne({
       where: {
         id: data.id,
@@ -63,13 +63,13 @@ export class GrpcService {
       throw new NotFoundException('Nutrition not found');
     }
 
-    const nutritionIngridient = this.nutritionsIngridientRepository.create({
+    const nutritionIngredient = this.nutritionsIngredientRepository.create({
       perGram: data.perGram,
-      ingridientId: data.ingridientId,
+      ingredientId: data.ingredientId,
       nutrition,
     });
 
-    await this.nutritionsIngridientRepository.save(nutritionIngridient);
+    await this.nutritionsIngredientRepository.save(nutritionIngredient);
 
     return nutrition;
   }

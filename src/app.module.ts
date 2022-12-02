@@ -9,7 +9,7 @@ import { AppService } from './app.service';
 import { GrpcService } from './grpc.service';
 import { JwtStrategy } from './jwt.strategy';
 import { Nutrition } from './nutrition.entity';
-import { NutritionIngridient } from './nutritions-ingridients.entity';
+import { NutritionIngredient } from './nutritions-ingredients.entity';
 import { ClientPackageNames } from './package-names.enum';
 
 @Module({
@@ -48,7 +48,7 @@ import { ClientPackageNames } from './package-names.enum';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([Nutrition, NutritionIngridient]),
+    TypeOrmModule.forFeature([Nutrition, NutritionIngredient]),
     JwtModule.register({}),
   ],
   controllers: [AppController, GrpcController],

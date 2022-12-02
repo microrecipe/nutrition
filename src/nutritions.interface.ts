@@ -1,4 +1,4 @@
-export interface IIngridient {
+export interface IIngredient {
   id?: number;
 }
 
@@ -6,7 +6,7 @@ export interface INutrition {
   id?: number;
   name?: string;
   perGram?: string;
-  ingridientId?: number;
+  ingredientId?: number;
 }
 
 export interface NutritionsList {
@@ -24,11 +24,11 @@ export interface AddNutrition {
 export interface SetNutrition {
   id: number;
   perGram: string;
-  ingridientId: number;
+  ingredientId: number;
 }
 
-export interface HandleIngridientDeletePayload {
-  ingridient_id: number;
+export interface HandleIngredientDeletePayload {
+  ingredient_id: number;
 }
 
 export interface UserType {

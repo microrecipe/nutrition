@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import { Nutrition } from './nutrition.entity';
 
-@Entity('nutritions_ingridients')
-export class NutritionIngridient {
+@Entity('nutritions_ingredients')
+export class NutritionIngredient {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -20,11 +20,11 @@ export class NutritionIngridient {
   perGram: string;
 
   @Column({
-    name: 'ingridient_id',
+    name: 'ingredient_id',
     type: 'int',
     nullable: true,
   })
-  ingridientId: number;
+  ingredientId: number;
 
   @ManyToOne(() => Nutrition, {
     nullable: true,

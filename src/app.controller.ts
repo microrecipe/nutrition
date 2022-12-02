@@ -18,7 +18,7 @@ import { JwtAuthGuard } from './auth.guard';
 import { NutritionsDTO } from './nutritions.dto';
 import {
   AddNutrition,
-  HandleIngridientDeletePayload,
+  HandleIngredientDeletePayload,
   UserType,
 } from './nutritions.interface';
 
@@ -50,12 +50,12 @@ export class AppController {
     return await this.service.deleteNutrition(id, user);
   }
 
-  @EventPattern('ingridient.deleted')
-  async handleIngridientDeleted(
-    @Payload() message: HandleIngridientDeletePayload,
+  @EventPattern('ingredient.deleted')
+  async handleIngredientDeleted(
+    @Payload() message: HandleIngredientDeletePayload,
   ): Promise<void> {
-    return await this.service.handleIngridientDeleted(
-      Number(message.ingridient_id),
+    return await this.service.handleIngredientDeleted(
+      Number(message.ingredient_id),
     );
   }
 }

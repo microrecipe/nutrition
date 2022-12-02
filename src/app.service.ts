@@ -4,7 +4,7 @@ import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { Nutrition } from './nutrition.entity';
-import { NutritionIngridient } from './nutritions-ingridients.entity';
+import { NutritionIngredient } from './nutritions-ingredients.entity';
 import { NutritionsDTO } from './nutritions.dto';
 import { AddNutrition, UserType } from './nutritions.interface';
 import { ClientPackageNames } from './package-names.enum';
@@ -18,8 +18,8 @@ export class AppService {
     private nutritionDeleteTopic: ClientKafka,
     @InjectRepository(Nutrition)
     private nutritionsRepository: Repository<Nutrition>,
-    @InjectRepository(NutritionIngridient)
-    private nutritionsIngridientRepository: Repository<NutritionIngridient>,
+    @InjectRepository(NutritionIngredient)
+    private nutritionsIngredientRepository: Repository<NutritionIngredient>,
   ) {}
 
   async listNutritions(): Promise<NutritionsDTO[]> {
@@ -69,17 +69,17 @@ export class AppService {
     return 'Nutrition deleted';
   }
 
-  async handleIngridientDeleted(ingridientId: number): Promise<void> {
-    this.logger.log('ingridient.deleted received');
+  async handleIngredientDeleted(ingredientId: number): Promise<void> {
+    this.logger.log('ingredient.deleted received');
 
-    const nutritionsIngridients =
-      await this.nutritionsIngridientRepository.find({
+    const nutritionsIngredients =
+      await this.nutritionsIngredientRepository.find({
         where: {
-          ingridientId,
+          ingredientId: ingredientId,
         },
       });
 
-    await this.nutritionsIngridientRepository.remove(nutritionsIngridients);
+    await this.nutritionsIngredientRepository.remove(nutritionsIngredients);
 
     this.logger.log('nutritions_recipes deleted');
 
