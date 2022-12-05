@@ -40,6 +40,9 @@ async function bootstrap() {
         clientId: 'microrecipe',
         brokers: process.env.KAFKA_BROKERS.split(','),
       },
+      consumer: {
+        groupId: 'nutrition',
+      },
     },
   });
 
