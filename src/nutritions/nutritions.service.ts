@@ -58,7 +58,7 @@ export class NutritionsService {
       throw new NotFoundException('Nutrition not found');
     }
 
-    await this.nutritionsRepository.remove(nutrition);
+    await this.nutritionsRepository.softRemove(nutrition);
 
     this.nutritionDeleteTopic
       .emit('nutrition.deleted', { nutrition_id: id })
@@ -73,13 +73,11 @@ export class NutritionsService {
     this.logger.log('ingredient.deleted received');
 
     const nutritionsIngredients =
-      await this.nutritionsIngredientRepository.find({
-        where: {
-          ingredientId: ingredientId,
-        },
+      await this.nutritionsIngredientRepository.findOneByOrFail({
+        ingredientId,
       });
 
-    await this.nutritionsIngredientRepository.remove(nutritionsIngredients);
+    await this.nutritionsIngredientRepository.softRemove(nutritionsIngredients);
 
     this.logger.log('nutritions_recipes deleted');
 
