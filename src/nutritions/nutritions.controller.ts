@@ -12,20 +12,20 @@ import {
   UseInterceptors,
 } from '@nestjs/common/decorators';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { AppService } from './app.service';
-import { UserPayload } from './auth.decorator';
-import { JwtAuthGuard } from './auth.guard';
-import { NutritionsDTO } from './nutritions.dto';
+import { NutritionsService } from './nutritions.service';
+import { UserPayload } from '../auth/auth.decorator';
+import { NutritionsDTO } from '../nutritions.dto';
 import {
   AddNutrition,
   HandleIngredientDeletePayload,
   UserType,
-} from './nutritions.interface';
+} from '../nutritions.interface';
+import { JwtAuthGuard } from '../auth/auth.guard';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
-export class AppController {
-  constructor(private readonly service: AppService) {}
+export class NutritionsController {
+  constructor(private readonly service: NutritionsService) {}
 
   @Get('nutritions')
   async listNutritions(): Promise<NutritionsDTO[]> {

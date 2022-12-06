@@ -20,7 +20,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: 'nutritions',
-      protoPath: join(__dirname, '../src/nutritions.proto'),
+      protoPath: join(__dirname, '../src/proto/nutritions.proto'),
       url: `0.0.0.0:${process.env.NUTRITION_GRPC_PORT}`,
     },
   });

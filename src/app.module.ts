@@ -3,14 +3,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config/dist';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GrpcController } from './grpc.controller';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { GrpcService } from './grpc.service';
-import { JwtStrategy } from './jwt.strategy';
-import { Nutrition } from './nutrition.entity';
-import { NutritionIngredient } from './nutritions-ingredients.entity';
-import { ClientPackageNames } from './package-names.enum';
+import { NutritionsController } from './nutritions/nutritions.controller';
+import { Nutrition } from './entities/nutrition.entity';
+import { JwtStrategy } from './auth/jwt.strategy';
+import { NutritionIngredient } from './entities/nutrition-ingredient.entity';
+import { ClientPackageNames } from './nutritions.enum';
+import { NutritionsService } from './nutritions/nutritions.service';
+import { NutritionsGrpcController } from './nutritions/nutritions-grpc.controller';
+import { NutritionsGrpcService } from './nutritions/nutritions-grpc.service';
 
 @Module({
   imports: [
@@ -41,7 +41,7 @@ import { ClientPackageNames } from './package-names.enum';
         username: configService.get('NUTRITION_DB_USERNAME'),
         password: configService.get('NUTRITION_DB_PASSWORD'),
         database: configService.get('NUTRITION_DB_NAME'),
-        entities: [__dirname + './*.entity{.ts,.js}'],
+        entities: [__dirname + './entities/*.entity{.ts,.js}'],
         autoLoadEntities: true,
         synchronize: true,
         logging: false,
@@ -51,7 +51,7 @@ import { ClientPackageNames } from './package-names.enum';
     TypeOrmModule.forFeature([Nutrition, NutritionIngredient]),
     JwtModule.register({}),
   ],
-  controllers: [AppController, GrpcController],
-  providers: [AppService, JwtStrategy, GrpcService],
+  controllers: [NutritionsController, NutritionsGrpcController],
+  providers: [NutritionsService, JwtStrategy, NutritionsGrpcService],
 })
 export class AppModule {}

@@ -3,14 +3,14 @@ import { Logger } from '@nestjs/common/services';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/repository/Repository';
-import { Nutrition } from './nutrition.entity';
-import { NutritionIngredient } from './nutritions-ingredients.entity';
-import { NutritionsDTO } from './nutritions.dto';
-import { AddNutrition, UserType } from './nutritions.interface';
-import { ClientPackageNames } from './package-names.enum';
+import { NutritionIngredient } from '../entities/nutrition-ingredient.entity';
+import { Nutrition } from '../entities/nutrition.entity';
+import { NutritionsDTO } from '../nutritions.dto';
+import { ClientPackageNames } from '../nutritions.enum';
+import { AddNutrition, UserType } from '../nutritions.interface';
 
 @Injectable()
-export class AppService {
+export class NutritionsService {
   private logger = new Logger('NutritionsService');
 
   constructor(

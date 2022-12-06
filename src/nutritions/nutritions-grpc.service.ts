@@ -1,17 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { Nutrition } from './nutrition.entity';
-import { NutritionIngredient } from './nutritions-ingredients.entity';
+import { NutritionIngredient } from '../entities/nutrition-ingredient.entity';
+import { Nutrition } from '../entities/nutrition.entity';
 import {
-  GetNutrition,
   IIngredient,
   INutrition,
   SetNutrition,
-} from './nutritions.interface';
+  GetNutrition,
+} from '../nutritions.interface';
 
 @Injectable()
-export class GrpcService {
+export class NutritionsGrpcService {
   constructor(
     @InjectRepository(Nutrition)
     private nutritionsRepository: Repository<Nutrition>,
