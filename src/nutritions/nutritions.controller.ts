@@ -32,6 +32,11 @@ export class NutritionsController {
     return await this.service.listNutritions();
   }
 
+  @Get('nutritions/:id')
+  async getNutritionById(@Param('id') id: number): Promise<NutritionsDTO> {
+    return await this.service.getNutritionById(id);
+  }
+
   @Post('nutritions')
   @UseGuards(JwtAuthGuard)
   async addNutrition(

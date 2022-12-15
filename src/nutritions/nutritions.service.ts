@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from '@nestjs/common/services';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EntityNotFoundError } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { NutritionIngredient } from '../entities/nutrition-ingredient.entity';
 import { Nutrition } from '../entities/nutrition.entity';
@@ -32,6 +33,22 @@ export class NutritionsService {
     return nutritions.map((nutrition) => NutritionsDTO.toDTO(nutrition));
   }
 
+  async getNutritionById(id: number): Promise<NutritionsDTO> {
+    try {
+      const nutrition = await this.nutritionsRepository.findOneByOrFail({
+        id,
+      });
+
+      return NutritionsDTO.toDTO(nutrition);
+    } catch (err) {
+      if (err instanceof EntityNotFoundError) {
+        throw new NotFoundException('Nutrition not found');
+      } else {
+        throw err;
+      }
+    }
+  }
+
   async addNutrition(
     data: AddNutrition,
     user: UserType,
@@ -47,26 +64,28 @@ export class NutritionsService {
   }
 
   async deleteNutrition(id: number, user: UserType): Promise<string> {
-    const nutrition = await this.nutritionsRepository.findOne({
-      where: {
+    try {
+      const nutrition = await this.nutritionsRepository.findOneByOrFail({
         id,
         userId: user.id,
-      },
-    });
-
-    if (!nutrition) {
-      throw new NotFoundException('Nutrition not found');
-    }
-
-    await this.nutritionsRepository.softRemove(nutrition);
-
-    this.nutritionDeleteTopic
-      .emit('nutrition.deleted', { nutrition_id: id })
-      .forEach(() => {
-        this.logger.log('nutrition.deleted emitted');
       });
 
-    return 'Nutrition deleted';
+      await this.nutritionsRepository.softRemove(nutrition);
+
+      this.nutritionDeleteTopic
+        .emit('nutrition.deleted', { nutrition_id: id })
+        .forEach(() => {
+          this.logger.log('nutrition.deleted emitted');
+        });
+
+      return 'Nutrition deleted';
+    } catch (err) {
+      if (err instanceof EntityNotFoundError) {
+        throw new NotFoundException('Nutrition not found');
+      } else {
+        throw err;
+      }
+    }
   }
 
   async handleIngredientDeleted(ingredientId: number): Promise<void> {
