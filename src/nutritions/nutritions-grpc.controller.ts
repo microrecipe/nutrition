@@ -30,6 +30,13 @@ export class NutritionsGrpcController {
   }
 
   @GrpcMethod('NutritionsService')
+  async removeNutritionDataForIngredient(
+    ingredient: IIngredient,
+  ): Promise<void> {
+    return await this.service.removeNutritionDataForIngredient(ingredient.id);
+  }
+
+  @GrpcMethod('NutritionsService')
   async getNutritionById(nutrition: GetNutrition): Promise<Nutrition> {
     return await this.service.getNutritionById(nutrition);
   }

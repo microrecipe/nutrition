@@ -74,6 +74,16 @@ export class NutritionsGrpcService {
     return nutrition;
   }
 
+  async removeNutritionDataForIngredient(ingredientId: number): Promise<void> {
+    const prevValues = await this.nutritionsIngredientRepository.findBy({
+      ingredientId: ingredientId,
+    });
+
+    await this.nutritionsIngredientRepository.softRemove(prevValues);
+
+    return;
+  }
+
   async getNutritionById(data: GetNutrition): Promise<Nutrition> {
     return await this.nutritionsRepository.findOne({
       where: {
